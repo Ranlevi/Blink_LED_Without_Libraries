@@ -5,7 +5,7 @@
 .thumb          /* Cortex-M executes Thumb instructions, not classic ARM mode. */
 
 /*  Symbols we export and import.
-    .global: This symbol is defined in this file and should be visible to the linker.
+    .global: This symbol is defined in this  file and should be visible to the linker.
     .extern: This symbol is defined somewhere else, but this file will use it.
 */
 
@@ -35,7 +35,7 @@
 .type g_pfnVectors, %object       /* symbol g_pfnVectors is an object (data, not executable).*/
 g_pfnVectors:
     .word _estack                 /* Initial stack pointer (SP) value */
-    .word Reset_Handler           /* reset handler address (PC) */
+    .word Reset_Handler           /* reset handler address */
     .word Default_Handler         /* NMI exception handled by the Default_Handler */
     .word Default_Handler         /* HardFault */
     .word Default_Handler         /* MemManage */

@@ -1,3 +1,10 @@
+/*  Declare Reset_Handler as the starting point
+    of the firmware. This declaration is not meant
+    for the CPU, which alwyas starts from the vector table
+    in memory anyway - it is a (madatory) toolchain 
+    metadata that helps with proper linking.
+    Reset_Handler itself is defined in startup.s
+*/
 ENTRY(Reset_Handler)
 
 MEMORY
@@ -21,13 +28,16 @@ MEMORY
   RAM   (xrw) : ORIGIN = 0x20000000, LENGTH = 0x20000
 }
 
+/*  Stack Pointer (SP) points to the top of the RAM area (the first address
+    past the RAM region). That's becuase the stack grows downwards in memory.
+*/
 _estack = ORIGIN(RAM) + LENGTH(RAM);
 
 SECTIONS
 {
   .isr_vector :
   {
-    /* Tells linker to round the cuurent location to the next multiple of 4.
+    /* Tells linker to round the current location to the next multiple of 4.
        This is because STM32 is 32-bits core (4 bytes), and access is more
        natural on word baundaries.
     */
@@ -52,12 +62,7 @@ SECTIONS
     *(.text*)   /*All input sections whose names start with .text (e.g. .text.main) */
     *(.rodata)  /* read-only constant data, like string literals or const data */
     *(.rodata*) /* Same idea, but catches variant names like .rodata.str1.4 */
-    . = ALIGN(4);
-
-    /* defines a symbol named _etext, that marks the "current location counter" (.) 
-       meaning the address at the end of this output section.
-    */
-    _etext = .; 
+    . = ALIGN(4);    
   } > FLASH
 
   .data :
@@ -82,7 +87,7 @@ SECTIONS
   */
   _sidata = LOADADDR(.data);
 
-    /*  RAM region for zero-initialized or uninitialized globals.
+    /*  RAM region for common symbols, zero-initialized or uninitialized globals.
         The reset handler must explicitly zero that region.
     */
   .bss :
